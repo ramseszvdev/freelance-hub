@@ -1,0 +1,282 @@
+// ============================================================================
+// PRISMA SCHEMA — Freelancer SaaS (project management + billing)
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ----------------------------------------------------------------------------
+// AUTH / USERS
+// ----------------------------------------------------------------------------
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  passwordHash    String
+  firstName       String
+  lastName        String
+  emailVerifiedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  memberships             WorkspaceMember[]
+  refreshTokens           RefreshToken[]
+  passwordResetTokens     PasswordResetToken[]
+  emailVerificationTokens EmailVerificationToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id            String    @id @default(uuid())
+  tokenHash     String    @unique
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt     DateTime
+  revokedAt     DateTime?
+  familyId      String
+  replacedById  String?
+  createdAt     DateTime  @default(now())
+
+  @@index([familyId])
+  @@map("refresh_tokens")
+}
+
+// ----------------------------------------------------------------------------
+// WORKSPACE (tenant) — Every business data hangs from a workspace
+// ----------------------------------------------------------------------------
+
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members      WorkspaceMember[]
+  clients      Client[]
+  projects     Project[]
+  invoices     Invoice[]
+  subscription Subscription?
+
+  @@map("workspaces")
+}
+
+enum WorkspaceRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+// Bridge table: a user can be in multiple workspaces with different roles
+model WorkspaceMember {
+  id          String        @id @default(uuid())
+  userId      String
+  workspaceId String
+  role        WorkspaceRole @default(OWNER)
+  createdAt   DateTime      @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+  @@map("workspace_members")
+}
+
+// ----------------------------------------------------------------------------
+// FREELANCER'S CLIENTE
+// ----------------------------------------------------------------------------
+
+model Client {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  email       String?
+  company     String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  projects  Project[]
+  invoices  Invoice[]
+
+  @@index([workspaceId])
+  @@map("clients")
+}
+
+// ----------------------------------------------------------------------------
+// PROJECTS
+// ----------------------------------------------------------------------------
+
+enum ProjectStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ARCHIVED
+}
+
+enum BillingType {
+  HOURLY
+  FIXED
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  workspaceId String
+  clientId    String
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  billingType BillingType   @default(HOURLY)
+  hourlyRate  Decimal?      @db.Decimal(10, 2) // used if billingType = HOURLY
+  fixedPrice  Decimal?      @db.Decimal(10, 2) // used if billingType = FIXED
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  workspace   Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  client      Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  timeEntries TimeEntry[]
+  invoiceItems InvoiceItem[]
+
+  @@index([workspaceId])
+  @@index([clientId])
+  @@map("projects")
+}
+
+// ----------------------------------------------------------------------------
+// TIME TRACKING
+// ----------------------------------------------------------------------------
+
+model TimeEntry {
+  id          String    @id @default(uuid())
+  projectId   String
+  description String?
+  startedAt   DateTime
+  endedAt     DateTime?
+  durationMin Int?      // It's calculated when the timer is closed, or entered manually
+  billed      Boolean   @default(false) // true once included in an invoice
+  createdAt   DateTime  @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@map("time_entries")
+}
+
+// ----------------------------------------------------------------------------
+// Billing
+// ----------------------------------------------------------------------------
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+model Invoice {
+  id          String        @id @default(uuid())
+  workspaceId String
+  clientId    String
+  number      String        // example: INV-0001 (secuencial por workspace)
+  status      InvoiceStatus @default(DRAFT)
+  issueDate   DateTime      @default(now())
+  dueDate     DateTime
+  subtotal    Decimal       @db.Decimal(10, 2)
+  tax         Decimal       @default(0) @db.Decimal(10, 2)
+  total       Decimal       @db.Decimal(10, 2)
+  paidAt      DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  workspace Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  client    Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  items     InvoiceItem[]
+
+  @@unique([workspaceId, number])
+  @@index([workspaceId])
+  @@index([clientId])
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id          String   @id @default(uuid())
+  invoiceId   String
+  projectId   String?
+  description String
+  quantity    Decimal  @db.Decimal(10, 2) // hours or units
+  unitPrice   Decimal  @db.Decimal(10, 2)
+  amount      Decimal  @db.Decimal(10, 2) // quantity * unitPrice
+
+  invoice Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@map("invoice_items")
+}
+
+// ----------------------------------------------------------------------------
+// SAAS MONETIZATION — the plan that the freelancer pays for themselves (via Stripe)
+// ----------------------------------------------------------------------------
+
+enum SubscriptionPlan {
+  FREE
+  PRO
+  BUSINESS
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  TRIALING
+}
+
+model Subscription {
+  id                   String             @id @default(uuid())
+  workspaceId          String             @unique
+  plan                 SubscriptionPlan   @default(FREE)
+  status               SubscriptionStatus @default(TRIALING)
+  stripeCustomerId     String?            @unique
+  stripeSubscriptionId String?            @unique
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
+model EmailVerificationToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@map("email_verification_tokens")
+}

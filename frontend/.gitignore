@@ -1,0 +1,25 @@
+# dependencias
+node_modules/
+
+# build de Next.js
+.next/
+out/
+
+# variables de entorno — NUNCA subir secretos reales
+.env*.local
+.env
+
+# testing
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts

@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# build
+dist/
+tsconfig.tsbuildinfo
+
+# environment variables — NEVER upload real secrets keys
+.env
+.env.*.local
+
+# Prisma
+prisma/migrations/dev.db
+
+# logs
+*.log
+npm-debug.log*
+
+# testing
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
