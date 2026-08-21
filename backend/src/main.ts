@@ -45,16 +45,14 @@ async function bootstrap() {
 
 	app.useGlobalFilters(new HttpExceptionFilter());
 
-	if (nodeEnv !== 'production') {
-		const config = new DocumentBuilder()
-			.setTitle('Freelance Hub API')
-			.setDescription('Project management and billing API for freelancers')
-			.setVersion('1.0')
-			.addBearerAuth()
-			.build();
-		const document = SwaggerModule.createDocument(app, config);
-		SwaggerModule.setup('api/docs', app, document);
-	}
+	const config = new DocumentBuilder()
+		.setTitle('Freelance Hub API')
+		.setDescription('Project management and billing API for freelancers')
+		.setVersion('1.0')
+		.addBearerAuth()
+		.build();
+	const document = SwaggerModule.createDocument(app, config);
+	SwaggerModule.setup('api/docs', app, document);
 
 	await app.listen(port);
 	console.log(`🚀 API running on http://localhost:${port}/api/v1`);
