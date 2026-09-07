@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,7 +9,7 @@ import { loginSchema, LoginInput } from '@/lib/validation/auth';
 import { Field } from '@/components/ui/field';
 import { SubmitButton } from '@/components/ui/submit-button';
 
-export default function LoginPage() {
+function LoginForm() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [serverError, setServerError] = useState<string | null>(null);
@@ -125,6 +125,27 @@ export default function LoginPage() {
 						</Link>
 					</p>
 				</div>
+			</div>
+		</main>
+	);
+}
+
+export default function LoginPage() {
+	return (
+		<main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-neutral-950 px-4 py-12 sm:px-6">
+			{/* Luz ambiental sutil de fondo */}
+			<div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-100 w-100 rounded-full bg-brass/10 blur-[120px]" />
+
+			<div className="relative w-full max-w-md">
+				<Suspense
+					fallback={
+						<div className="flex h-80 w-full items-center justify-center rounded-2xl border border-white/10 bg-neutral-900/60 backdrop-blur-xl">
+							<div className="h-6 w-6 animate-spin rounded-full border-2 border-brass border-t-transparent" />
+						</div>
+					}
+				>
+					<LoginForm />
+				</Suspense>
 			</div>
 		</main>
 	);

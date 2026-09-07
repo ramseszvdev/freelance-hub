@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,7 +10,7 @@ import { Field } from '@/components/ui/field';
 import { SubmitButton } from '@/components/ui/submit-button';
 import { AlertCircle, ArrowLeft, CheckCircle2, Lock } from 'lucide-react';
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const token = searchParams.get('token');
@@ -146,6 +146,27 @@ export default function ResetPasswordPage() {
 						</>
 					)}
 				</div>
+			</div>
+		</main>
+	);
+}
+
+export default function ResetPasswordPage() {
+	return (
+		<main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-neutral-950 px-4 py-12 sm:px-6">
+			{/* Luz ambiental de fondo */}
+			<div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-100 w-100 rounded-full bg-brass/10 blur-[120px]" />
+
+			<div className="relative w-full max-w-md">
+				<Suspense
+					fallback={
+						<div className="flex h-80 w-full items-center justify-center rounded-2xl border border-white/10 bg-neutral-900/60 backdrop-blur-xl">
+							<div className="h-6 w-6 animate-spin rounded-full border-2 border-brass border-t-transparent" />
+						</div>
+					}
+				>
+					<ResetPasswordForm />
+				</Suspense>
 			</div>
 		</main>
 	);
