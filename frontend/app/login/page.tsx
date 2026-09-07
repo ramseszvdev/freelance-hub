@@ -133,7 +133,6 @@ function LoginForm() {
 export default function LoginPage() {
 	return (
 		<main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-neutral-950 px-4 py-12 sm:px-6">
-			{/* Luz ambiental sutil de fondo */}
 			<div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-100 w-100 rounded-full bg-brass/10 blur-[120px]" />
 
 			<div className="relative w-full max-w-md">
