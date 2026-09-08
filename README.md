@@ -4,7 +4,9 @@ SaaS de gestión de proyectos, horas trabajadas y facturación para freelancers 
 
 **Demo en vivo:** 
 
-*Register*: <img width="505" height="666" alt="Screenshot_8-9-2026_105839_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/93c3068d-f90a-48cc-9858-50d326a072b8" />
+*Register*:
+
+<img width="505" height="666" alt="Screenshot_8-9-2026_105839_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/93c3068d-f90a-48cc-9858-50d326a072b8" />
 
 *Login*: <img width="440" height="647" alt="Screenshot_8-9-2026_105812_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/4db9899a-c0c5-42d7-9a48-a5d62397063f" />
 
