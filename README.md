@@ -3,7 +3,8 @@
 SaaS de gestión de proyectos, horas trabajadas y facturación para freelancers y estudios creativos. Construido como proyecto full-stack completo — desde el modelo de datos hasta el cobro de suscripciones con Stripe.
 
 **Demo en vivo:** _(próximamente)_
-**Video/capturas:** _(próximamente)_
+**Video/capturas:** Register: <img width="505" height="666" alt="Screenshot_8-9-2026_105839_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/93c3068d-f90a-48cc-9858-50d326a072b8" />
+
 
 ---
 
