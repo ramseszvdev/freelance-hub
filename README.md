@@ -14,19 +14,19 @@ SaaS de gestión de proyectos, horas trabajadas y facturación para freelancers 
 
 <img width="440" height="647" alt="Screenshot_8-9-2026_105812_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/4db9899a-c0c5-42d7-9a48-a5d62397063f" />
 
---
+---
 
 *Main Page*:
 
 <img width="1195" height="734" alt="Screenshot_8-9-2026_10406_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/d94771bf-00b5-4f01-ad60-032232b58c50" />
 
---
+---
 
 *Dashboard*:
 
 <img width="1553" height="647" alt="Screenshot_8-9-2026_10459_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/a65c3e2c-132e-4497-bd3a-496b202794e4" />
 
---
+---
 
 *Clients*:
 
@@ -34,27 +34,27 @@ SaaS de gestión de proyectos, horas trabajadas y facturación para freelancers 
 <img width="497" height="435" alt="Screenshot_8-9-2026_104834_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/a994819f-60f1-4188-94bf-f3d57911d60c" />
 <img width="1583" height="711" alt="Screenshot_8-9-2026_104614_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/ccf2995d-c1ae-4aff-ad25-d660c5508a04" />
 
---
+---
 
 *Projects*:
 
 <img width="1300" height="279" alt="Screenshot_8-9-2026_104851_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/e901421e-e96a-46e8-b722-5070c981a452" />
 
---
+---
 
 *Hours*:
 
 <img width="1298" height="512" alt="Screenshot_8-9-2026_105612_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/b3ab0b28-033f-4c97-a78c-e71a241ededf" />
 <img width="1285" height="725" alt="Screenshot_8-9-2026_105556_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/7fb8e68d-c7ee-4aaa-9af2-11eda65cf603" />
 
---
+---
 
 *Invoices*:
 
 <img width="1304" height="299" alt="Screenshot_8-9-2026_105715_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/8bf5e0ad-a84a-41cb-a70f-e6d472277872" />
 <img width="1298" height="512" alt="Screenshot_8-9-2026_105612_freelance-hub-ruby vercel app" src="https://github.com/user-attachments/assets/f4c3fff4-dd1c-41f4-8d78-539508486bb0" />
 
---
+---
 
 *Plan and Payments*:
 
