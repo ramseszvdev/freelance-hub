@@ -127,4 +127,3 @@ npm run dev
 - Cuenta de [Stripe](https://stripe.com) en modo test (checkout + webhooks)
 - Cuenta de [Resend](https://resend.com) (emails transaccionales)
 
-## Estructura del proyecto
